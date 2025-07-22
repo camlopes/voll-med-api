@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("consultas")
-public class ConcultaController {
+public class ConsultaController {
 
     @Autowired
     private AgendaDeConsultas agenda;
