@@ -5,9 +5,11 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import med.voll.api.domain.consulta.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.List;
@@ -44,5 +46,11 @@ public class ConsultaController {
 
         List<DadosRelatorioConsultaMensal> relatorio = consultaRepository.gerarRelatorioConsultaMensal(inicio, fim);
         return ResponseEntity.ok(relatorio);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<DadosListagemConsulta>> listarProximasConsultas(@PageableDefault(size = 10, sort = {"data"}) Pageable paginacao) {
+        var proximasConsultas = consultaRepository.findAllByDataGreaterThan(LocalDateTime.now(), paginacao).map(DadosListagemConsulta::new);
+        return ResponseEntity.ok(proximasConsultas);
     }
 }
