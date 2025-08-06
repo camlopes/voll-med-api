@@ -49,6 +49,39 @@ class ConsultaRepositoryTest {
         assertEquals(1L, resultado.quantidadeConsultasNoMes());
     }
 
+    @Test
+    @DisplayName("Valida se o relatório retornado contém a quantidade de 3 consultas para o mesmo medico")
+    void gerarRelatorioConsultaMensalCenario2() {
+        // Arrange
+        var medico1 = cadastrarMedico("Medico1", "medico1@voll.med", "123456", Especialidade.CARDIOLOGIA);
+        var paciente1 = cadastrarPaciente("Paciente1", "paciente1@email.com", "00000000000");
+        var dataConsulta1 = LocalDateTime.of(2025, 8, 6, 10, 0);
+        cadastrarConsulta(medico1, paciente1, dataConsulta1);
+
+        var paciente2 = cadastrarPaciente("Paciente2", "paciente2@email.com", "00000000022");
+        var dataConsulta2 = LocalDateTime.of(2025, 8, 7, 10, 0);
+        cadastrarConsulta(medico1, paciente2, dataConsulta2);
+
+        var paciente3 = cadastrarPaciente("Paciente3", "paciente3@email.com", "12300000000");
+        var dataConsulta3 = LocalDateTime.of(2025, 8, 8, 10, 0);
+        cadastrarConsulta(medico1, paciente3, dataConsulta3);
+
+        var inicioMes = LocalDateTime.of(2025, 8, 1, 0, 0);
+        var fimMes = LocalDateTime.of(2025, 8, 31, 23, 59);
+
+        // Act
+        List<DadosRelatorioConsultaMensal> relatorio = consultaRepository.gerarRelatorioConsultaMensal(inicioMes, fimMes);
+
+        // Assert
+        assertEquals(1, relatorio.size());
+
+        var resultado = relatorio.get(0);
+        assertEquals("Medico1", resultado.nome());
+        assertEquals("123456", resultado.crm());
+
+        assertEquals(3L, resultado.quantidadeConsultasNoMes());
+    }
+
     private void cadastrarConsulta(Medico medico, Paciente paciente, LocalDateTime data) {
         em.persist(new Consulta(null, medico, paciente, data, null));
     }
