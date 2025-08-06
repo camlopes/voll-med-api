@@ -59,4 +59,41 @@ class ValidadorHorarioFuncionamentoClinicaTest {
         var ex = assertThrows(ValidacaoException.class, () -> validador.validar(dados));
         assertEquals("Consulta fora do horário de funcionamento da clínica", ex.getMessage());
     }
+
+    @Test
+    @DisplayName("Deve Permitir Consulta Exatamente As 7 Horas")
+    void ValidadorHorarioFuncionamentoClinicaCenario5() {
+        LocalDateTime data = LocalDateTime.of(2025, 8, 4, 7, 0);
+        var dados = new DadosAgendamentoConsulta(1L, 1L, data, null);
+
+        assertDoesNotThrow(() -> validador.validar(dados));
+    }
+
+    @Test
+    @DisplayName("Deve Permitir Consulta Exatamente As 18 Horas")
+    void ValidadorHorarioFuncionamentoClinicaCenario6() {
+        LocalDateTime data = LocalDateTime.of(2025, 8, 4, 18, 0);
+        var dados = new DadosAgendamentoConsulta(1L, 1L, data, null);
+
+        assertDoesNotThrow(() -> validador.validar(dados));
+    }
+
+    @Test
+    @DisplayName("Deve Permitir Consulta No Sabado Dentro Do Horario")
+    void ValidadorHorarioFuncionamentoClinicaCenario7() {
+        LocalDateTime data = LocalDateTime.of(2025, 8, 9, 10, 0);
+        var dados = new DadosAgendamentoConsulta(1L, 1L, data, null);
+
+        assertDoesNotThrow(() -> validador.validar(dados));
+    }
+
+    @Test
+    @DisplayName("Deve Lancar Excecao para Consulta marcadas segundos antes das 7 Horas")
+    void ValidadorHorarioFuncionamentoClinicaCenario8() {
+        LocalDateTime data = LocalDateTime.of(2025, 8, 4, 6, 59, 59);
+        var dados = new DadosAgendamentoConsulta(1L, 1L, data, null);
+
+        var ex = assertThrows(ValidacaoException.class, () -> validador.validar(dados));
+        assertEquals("Consulta fora do horário de funcionamento da clínica", ex.getMessage());
+    }
 }
