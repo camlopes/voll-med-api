@@ -18,3 +18,4 @@ Desenvolvimento de uma API Rest utilizando o Spring Boot 3 como framework realiz
 - Spring Security JWT
 - Swagger/OpenAPI 
 - Insomnia
+- Docker
